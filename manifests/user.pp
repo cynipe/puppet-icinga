@@ -8,9 +8,8 @@ define icinga::user (
   $contact_name                  = $name,
   $contactgroup                  = undef,
   $email                         = undef,
-  $hash                          = undef,
   $pager                         = undef,
-  $password,
+  $password_hash                 = undef,
   $host_notification_commands    = $::icinga::notification_cmd_host,
   $host_notification_period      = $::icinga::notification_period,
   $host_notifications_enabled    = $::icinga::notification_host_enable,
@@ -32,17 +31,9 @@ define icinga::user (
 
     case $ensure {
       present: {
-        if ! $hash {
-          exec { "Add Icinga user ${name}":
-            command => "htpasswd -b -s ${htpasswd} ${name} ${password}",
-            unless  => "grep -iE '^${name}:' ${htpasswd}",
-            cwd     => $::icinga::confdir_server,
-          }
-        } else {
-          exec { "Add Icinga user hash ${name}":
-            command => "echo \"${name}:${hash}\" >> ${htpasswd}",
-            unless  => "grep -iE '^${name}:' ${htpasswd}",
-          }
+        exec { "Add Icinga user hash ${name}":
+          command => "echo \"${name}:${password_hash}\" >> ${htpasswd}",
+          unless  => "grep -iE '^${name}:${password_hash}' ${htpasswd}",
         }
       }
 
