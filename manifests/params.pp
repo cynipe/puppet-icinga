@@ -85,8 +85,8 @@ class icinga::params {
       # Icinga
       $package_client_ensure     = 'present'
       $package_server_ensure     = 'present'
-      $package_client            = [ 'nagios-nrpe', 'nagios-plugins', 'nagios-plugins-all' ]
-      $package_server            = [ 'icinga', 'icinga-api', 'icinga-doc', 'icinga-gui', 'nagios-plugins-nrpe' ]
+      $package_client            = [ 'nrpe', 'nagios-plugins', 'nagios-plugins-all' ]
+      $package_server            = [ 'icinga', 'icinga-gui', 'icinga-doc', 'nagios-plugins-nrpe' ]
       $service_client            = 'nrpe'
       $service_client_ensure     = 'running'
       $service_client_enable     = true
@@ -122,21 +122,22 @@ class icinga::params {
       $logdir_client             = '/var/log/nrpe'
       $logdir_server             = '/var/log/icinga'
 
+
       # Plugin: Icinga Web
       $icingaweb_pkg     = [ 'icinga-web' ]
-      $icingaweb_pkg_dep = [ 'perl-Locale-PO', 'php-ldap', 'php-pear', 'php-xml', 'php-mysql' ]
-      $icingaweb_confdir = '/usr/share/icinga-web'
-      $icingaweb_bindir  = "${icingaweb_confdir}/bin:${::path}"
-      $icingaweb_logdir  = '/usr/share/icinga-web/log'
+      $icingaweb_pkg_dep = [ 'php-xml', 'php-xmlrpc', 'php-soap', 'php-mysql' ]
+      $icingaweb_sharedir = '/usr/share/icinga-web'
+      $icingaweb_confdir  = '/etc/icinga-web'
+      $icingaweb_dbsql    = "/usr/share/doc/icinga-web-${::icinga_version}/schema/mysql.sql"
       $icingaweb_dbname  = 'icinga_web'
       $icingaweb_dbuser  = 'icinga_web'
       $icingaweb_dbpass  = 'icinga_web'
       $icingaweb_vhost   = '/etc/httpd/conf.d/icinga-web.conf'
 
       # Plugin: IDOUtils
-      $idoutils_pkg     = [ 'icinga-idoutils', 'libdbi', 'libdbi-devel', 'libdbi-drivers', 'libdbi-dbd-mysql' ]
-      $idoutils_confdir = '/etc/icinga/idoutils'
+      $idoutils_pkg        = 'icinga-idoutils-libdbi-mysql'
       $idoutils_service = 'ido2db'
+      $idoutils_dbsql     = "/usr/share/doc/icinga-idoutils-libdbi-mysql-${::icinga_version}/db/mysql/mysql.sql"
       $idoutils_dbname  = 'icinga'
       $idoutils_dbuser  = 'icinga'
       $idoutils_dbpass  = 'icinga'
