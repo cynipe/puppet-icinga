@@ -123,7 +123,7 @@ class icinga::params {
       $htpasswd_file             = "${confdir_server}/htpasswd.users"
       $targetdir                 = "${confdir_server}/objects"
       $targetdir_contacts        = "${targetdir}/contacts/contacts.cfg"
-      $icinga_vhost              = '/etc/icinga/apache2.conf'
+      $icinga_vhost              = '/etc/httpd/conf.d/icinga.conf'
       $logdir_client             = '/var/log/nrpe'
       $logdir_server             = '/var/log/icinga'
 
