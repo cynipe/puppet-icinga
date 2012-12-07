@@ -3,6 +3,11 @@
 # Full description of class icinga here.
 #
 class icinga::params {
+  # FIXME Need to find the way to what version to be installed.
+  # Since facter fetch the values at very first of the process,
+  # it's impossible to do this before the yumrepo setuped. ugh
+  # $version = ${::icinga_version}
+  $version                     = '1.7.2'
   $manage_repo                 = false
   $client                      = true
   $server                      = false
@@ -128,7 +133,7 @@ class icinga::params {
       $icingaweb_pkg_dep = [ 'php-xml', 'php-xmlrpc', 'php-soap', 'php-mysql' ]
       $icingaweb_sharedir = '/usr/share/icinga-web'
       $icingaweb_confdir  = '/etc/icinga-web'
-      $icingaweb_dbsql    = "/usr/share/doc/icinga-web-${::icinga_version}/schema/mysql.sql"
+      $icingaweb_dbsql    = "/usr/share/doc/icinga-web-${version}/schema/mysql.sql"
       $icingaweb_dbname  = 'icinga_web'
       $icingaweb_dbuser  = 'icinga_web'
       $icingaweb_dbpass  = 'icinga_web'
@@ -137,7 +142,7 @@ class icinga::params {
       # Plugin: IDOUtils
       $idoutils_pkg        = 'icinga-idoutils-libdbi-mysql'
       $idoutils_service = 'ido2db'
-      $idoutils_dbsql     = "/usr/share/doc/icinga-idoutils-libdbi-mysql-${::icinga_version}/db/mysql/mysql.sql"
+      $idoutils_dbsql     = "/usr/share/doc/icinga-idoutils-libdbi-mysql-${version}/db/mysql/mysql.sql"
       $idoutils_dbname  = 'icinga'
       $idoutils_dbuser  = 'icinga'
       $idoutils_dbpass  = 'icinga'
