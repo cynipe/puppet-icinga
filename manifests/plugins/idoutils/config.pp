@@ -12,12 +12,12 @@ class icinga::plugins::idoutils::config {
   }
 
   file {
-    "${::icinga::confdir_server}/ido2db.cfg":
+    "/etc/icinga/ido2db.cfg":
       ensure  => present,
       content => template('icinga/plugins/idoutils/ido2db.cfg.erb');
 
-    "${::icinga::confdir_server}/idomod.cfg":
-      content => template('icinga/plugins/idoutils/idomod.cfg');
+    "/etc/icinga/idomod.cfg":
+      content => template('icinga/plugins/idoutils/idomod.cfg.erb');
   }
 
   Exec {

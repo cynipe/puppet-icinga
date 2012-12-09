@@ -26,16 +26,16 @@ output_type=unixsocket
 
 
 # OUTPUT
-# This option determines the name and path of the file or UNIX domain 
+# This option determines the name and path of the file or UNIX domain
 # socket to which output will be sent if the output type option specified
 # above is "file" or "unixsocket", respectively.  If the output type
 # option is "tcpsocket", this option is used to specify the IP address
 # of fully qualified domain name of the host that the module should
 # connect to for sending output.
 
-#output=/var/icinga/ido.dat
+#output=/var/spool/icinga/ido.dat
 #output=127.0.0.1
-output=/var/icinga/ido.sock
+output=/var/spool/icinga/ido.sock
 
 
 
@@ -49,10 +49,10 @@ tcp_port=5668
 
 
 # ENCRYPTION
-# This option determines if the module will use SSL to encrypt the 
+# This option determines if the module will use SSL to encrypt the
 # network traffic between module and ido2db daemon.
 # Both sides have to enable this feature which depends on SSL Libraries
-# like openssl or kerberos 
+# like openssl or kerberos
 # This option is only valid if the output type
 # option specified above is "tcpsocket".
 #
@@ -80,7 +80,7 @@ output_buffer_items=5000
 # Icinga (re)starts, the IDO NEB module will read the contents of this
 # file and send it to the IDO2DB daemon for processing.
 
-buffer_file=/var/icinga/idomod.tmp
+buffer_file=/var/spool/icinga/idomod.tmp
 
 
 
@@ -136,13 +136,13 @@ reconnect_warning_interval=15
 
 
 # DATA PROCESSING OPTION
-# This option determines what data the IDO NEB module will process. 
+# This option determines what data the IDO NEB module will process.
 # Do not mess with this option unless you know what you're doing!!!!
 #
-# Read the source code (module/idoutils/include/idomod.h) and look for 
-# "IDOMOD_PROCESS_" to determine what values to use here.  
-# Values from source code should be OR'ed to get the value to use here.  
-# A value of -1 will cause all data to be processed. 
+# Read the source code (module/idoutils/include/idomod.h) and look for
+# "IDOMOD_PROCESS_" to determine what values to use here.
+# Values from source code should be OR'ed to get the value to use here.
+# A value of -1 will cause all data to be processed.
 
 # Basically you have to calculate from the following values
 #
@@ -175,13 +175,16 @@ reconnect_warning_interval=15
 #
 #define IDOMOD_PROCESS_EVERYTHING                     67108863
 #
+# ATTENTION: if process data is not dumped via idomod, ido2db won't
+#            clean tables and set objects inactive!!!
+#
 # You may use the Online Calculator by Gerhard Lausser:
 # http://labs.consol.de/nagios/ndo-data-processing-options/
 # (please note that there is a checkbox for everything!)
 #
 # The default setting will remove everything not used by default.
-# TIMED_EVENT_DATA  (-2)
-# SERVICE_CHECK_DATA  (-64)
+# TIMED_EVENT_DATA   (-2)
+# SERVICE_CHECK_DATA   (-64)
 # HOST_CHECK_DATA   (-128)
 #
 # 67108863-(2+64+128) = 67108863-194 = 67108669
@@ -229,14 +232,14 @@ debug_level=0
 #         1 = More detailed
 #         2 = Very detailed
 
-debug_verbosity=1
+debug_verbosity=2
 
 
 
 # DEBUG FILE
 # This option determines where the daemon should write debugging information.
 
-debug_file=/var/icinga/idomod.debug
+debug_file=/var/log/icinga/idomod.debug
 
 
 
@@ -249,3 +252,4 @@ debug_file=/var/icinga/idomod.debug
 
 # 100M
 max_debug_file_size=100000000
+

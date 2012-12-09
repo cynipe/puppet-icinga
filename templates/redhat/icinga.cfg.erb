@@ -18,28 +18,39 @@
 # for historical purposes.  This should be the first option specified
 # in the config file!!!
 
-log_file=<%= scope.lookupvar('icinga::logdir_server') -%>/icinga.log
+log_file=/var/log/icinga/icinga.log
 
 
 
 # OBJECT CONFIGURATION FILE(S)
 # These are the object configuration files in which you define hosts,
 # host groups, contacts, contact groups, services, etc.
-# You can split your object definitions across several config files
-# if you wish (as shown below), or keep them all in a single config file.
+# Hint: Check the docs/wiki on how to monitor remote hosts with different
+# transport methods and plugins
+
+# You can tell Icinga to process all config files (with a .cfg
+# extension) in a particular directory recursively by using the
+# cfg_dir directive as shown below with conf.d
+
+cfg_dir=/etc/icinga/conf.d
+
+# or you can split your object definitions across several config files
+# and include them one by one - see the provided sample config
+# in objects/
+#
+# ATTENTION: do not mix cfg_file and cfg_dir such as
+# cfg_file=foo/bar.cfg
+# cfg_dir=foo
+# this will include bar.cfg 2 times and lead to config verification errors.
 
 # You can specify individual object config files as shown below:
-#cfg_file=/etc/icinga/objects/commands.cfg
-#cfg_file=/etc/icinga/objects/commands-perfdata.cfg
-#cfg_file=/etc/icinga/objects/contacts.cfg
-#cfg_file=/etc/icinga/objects/timeperiods.cfg
-#cfg_file=/etc/icinga/objects/templates.cfg
+cfg_file=/etc/icinga/objects/commands.cfg
+cfg_file=/etc/icinga/objects/contacts.cfg
+cfg_file=/etc/icinga/objects/timeperiods.cfg
+cfg_file=/etc/icinga/objects/templates.cfg
 
 # Definitions for monitoring the local (Linux) host
-#cfg_file=/etc/icinga/objects/localhost.cfg
-
-#cfg_file=/etc/icinga/objects/hostgroups.cfg
-#cfg_file=/etc/icinga/objects/linux-servers.cfg
+cfg_file=/etc/icinga/objects/localhost.cfg
 
 # Definitions for monitoring a Windows machine
 #cfg_file=/etc/icinga/objects/windows.cfg
@@ -50,12 +61,11 @@ log_file=<%= scope.lookupvar('icinga::logdir_server') -%>/icinga.log
 # Definitions for monitoring a network printer
 #cfg_file=/etc/icinga/objects/printer.cfg
 
+# Definitions for ido2db process checks
+#cfg_file=/etc/icinga/objects/ido2db_check_proc.cfg
 
-# You can also tell Icinga to process all config files (with a .cfg
-# extension) in a particular directory by using the cfg_dir
-# directive as shown below:
-
-cfg_dir=/etc/icinga/objects
+# Definitions for broker modules like idoutils.cfg
+cfg_dir=/etc/icinga/modules
 
 
 
@@ -66,7 +76,7 @@ cfg_dir=/etc/icinga/objects
 # directly) in order to prevent inconsistencies that can occur
 # when the config files are modified after Icinga starts.
 
-object_cache_file=<%= scope.lookupvar('icinga::vardir_server') -%>/objects.cache
+object_cache_file=/var/spool/icinga/objects.cache
 
 
 
@@ -82,7 +92,7 @@ object_cache_file=<%= scope.lookupvar('icinga::vardir_server') -%>/objects.cache
 # Read the documentation section on optimizing Icinga to find our more
 # about how this feature works.
 
-precached_object_file=<%= scope.lookupvar('icinga::vardir_server') -%>/objects.precache
+precached_object_file=/var/spool/icinga/objects.precache
 
 
 
@@ -105,7 +115,7 @@ resource_file=/etc/icinga/resource.cfg
 # The contents of the status file are deleted every time Icinga
 #  restarts.
 
-status_file=<%= scope.lookupvar('icinga::vardir_server') -%>/status.dat
+status_file=/var/spool/icinga/status.dat
 
 
 
@@ -113,8 +123,10 @@ status_file=<%= scope.lookupvar('icinga::vardir_server') -%>/status.dat
 # This option determines the frequency (in seconds) that
 # Icinga will periodically dump program, host, and
 # service status data.
+# Increase the value, if you don't require it that often.
 
-status_update_interval=30
+#status_update_interval=30
+status_update_interval=10
 
 
 
@@ -172,7 +184,7 @@ command_check_interval=-1
 # directory level instead of on the file, as the file is deleted every
 # time its contents are processed.
 
-command_file=<%= scope.lookupvar('icinga::vardir_server') -%>/rw/icinga.cmd
+command_file=/var/spool/icinga/cmd/icinga.cmd
 
 
 
@@ -181,8 +193,11 @@ command_file=<%= scope.lookupvar('icinga::vardir_server') -%>/rw/icinga.cmd
 # the Icinga daemon should allocate to the buffer that holds incoming
 # external commands before they are processed.  As external commands
 # are processed by the daemon, they are removed from the buffer.
+# Increase the value, if you are using addons like check_mk supplying
+# more external commands (passive check results) than usual.
 
-external_command_buffer_slots=32768
+#external_command_buffer_slots=32768
+external_command_buffer_slots=4096
 
 
 
@@ -190,7 +205,7 @@ external_command_buffer_slots=32768
 # This is the lockfile that Icinga will use to store its PID number
 # in when it is running in daemon mode.
 
-lock_file=<%= scope.lookupvar('icinga::vardir_server') -%>/icinga.pid
+lock_file=/var/run/icinga.pid
 
 
 
@@ -200,7 +215,7 @@ lock_file=<%= scope.lookupvar('icinga::vardir_server') -%>/icinga.pid
 # is created, used, and deleted throughout the time that Icinga is
 # running.
 
-temp_file=<%= scope.lookupvar('icinga::vardir_server') -%>/icinga.tmp
+temp_file=/tmp/icinga.tmp
 
 
 
@@ -223,7 +238,10 @@ event_broker_options=-1
 
 
 # EVENT BROKER MODULE(S)
-# This directive is used to specify an event broker module that should
+# ----> use the new *module definition* instead:
+# ----> http://docs.icinga.org/latest/en/objectdefinitions.html
+#
+# This directive can be used to specify an event broker module that should
 # by loaded by Icinga at startup.  Use multiple directives if you want
 # to load more than one module.  Arguments that should be passed to
 # the module at startup are seperated from the module path by a space.
@@ -231,34 +249,39 @@ event_broker_options=-1
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # WARNING !!! WARNING !!! WARNING !!! WARNING !!! WARNING !!! WARNING
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#
 # Do NOT overwrite modules while they are being used by Icinga or Icinga
-# will crash in a fiery display of SEGFAULT glory.  This is a bug/limitation
-# either in dlopen(), the kernel, and/or the filesystem.  And maybe Icinga...
+# will crash in a fiery display of SEGFAULT glory.
 #
 # The correct/safe way of updating a module is by using one of these methods:
 #    1. Shutdown Icinga, replace the module file, restart Icinga
 #    2. Delete the original module file, move the new module file into place, restart Icinga
 #
-# Example:
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# WARNING !!! WARNING !!! WARNING !!! WARNING !!! WARNING !!! WARNING
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #
+# IDOUtils idomod.so should be enabled using the module definition,
+# i.e. using a package. First check that, and if not, you can
+# enable it here.
+#
+# ATTENTION: DO NOT load the same module here AND as a module definition.
+# This can lead into problems with races on ressources.
+#
+# Example:
 #   broker_module=<modulepath> [moduleargs]
 
-#broker_module=/somewhere/module1.o
-#broker_module=/somewhere/module2.o arg1 arg2=3 debug=0
+#broker_module=/usr/lib64/icinga/idomod.so config_file=/etc/icinga/idomod.cfg
 
-# Uncomment this to enable idomod.o
-#broker_module=/usr/bin/idomod.o config_file=/etc/icinga/idomod.cfg
-broker_module=/usr/bin/idomod.o config_file=/etc/icinga/idomod.cfg
+
 
 # LOG ROTATION METHOD
 # This is the log rotation method that Icinga should use to rotate
 # the main log file. Values are as follows..
-#	n	= None - don't rotate the log
-#	h	= Hourly rotation (top of the hour)
-#	d	= Daily rotation (midnight every day)
-#	w	= Weekly rotation (midnight on Saturday evening)
-#	m	= Monthly rotation (midnight last day of month)
+#  n  = None - don't rotate the log
+#  h  = Hourly rotation (top of the hour)
+#  d  = Daily rotation (midnight every day)
+#  w  = Weekly rotation (midnight on Saturday evening)
+#  m  = Monthly rotation (midnight last day of month)
 
 log_rotation_method=d
 
@@ -268,7 +291,7 @@ log_rotation_method=d
 # This is the directory where archived (rotated) log files should be
 # placed (assuming you've chosen to do log rotation).
 
-log_archive_path=<%= scope.lookupvar('icinga::logdir_server') -%>/archives
+log_archive_path=/var/log/icinga/archives
 
 
 
@@ -276,7 +299,7 @@ log_archive_path=<%= scope.lookupvar('icinga::logdir_server') -%>/archives
 # If you want messages logged to the daemon log file (usually icinga.log).
 # Default option is 1 (yes), the other valid option is 0 (no)
 
-#use_daemon_log=1
+use_daemon_log=1
 
 
 
@@ -349,6 +372,15 @@ log_initial_states=0
 
 
 
+# CURRENT STATES LOGGING OPTION
+# If you don't want Icinga to log all current host and service states
+# after log has been rotated to the main log file, you can disable this
+# option by setting this value to 0. Default value is 1.
+
+log_current_states=1
+
+
+
 # EXTERNAL COMMANDS LOGGING OPTION
 # If you don't want Icinga to log external commands, set this value
 # to 0.  If external commands should be logged, set this value to 1.
@@ -366,6 +398,15 @@ log_external_commands=1
 # this value to 1.
 
 log_passive_checks=1
+
+
+
+# LONG PLUGIN OUTPUT LOGGING OPTION
+# If you want Icinga to log the complete text of the plugin output
+# to the log instead of only the first line then set this value to 1.
+# Default value is 0.
+
+log_long_plugin_output=0
 
 
 
@@ -392,9 +433,9 @@ log_passive_checks=1
 # at the same time (with no delay between them)!  This is not a
 # good thing for production, but is useful when testing the
 # parallelization functionality.
-#	n	= None - don't use any delay between checks
-#	d	= Use a "dumb" delay of 1 second between checks
-#	s	= Use "smart" inter-check delay calculation
+#  n  = None - don't use any delay between checks
+#  d  = Use a "dumb" delay of 1 second between checks
+#  s  = Use "smart" inter-check delay calculation
 #       x.xx    = Use an inter-check delay of x.xx seconds
 
 service_inter_check_delay_method=s
@@ -433,9 +474,9 @@ service_interleave_factor=s
 # space all host checks out evenly to minimize CPU load.
 # Using the dumb setting will cause all checks to be scheduled
 # at the same time (with no delay between them)!
-#	n	= None - don't use any delay between checks
-#	d	= Use a "dumb" delay of 1 second between checks
-#	s	= Use "smart" inter-check delay calculation
+#  n  = None - don't use any delay between checks
+#  d  = Use a "dumb" delay of 1 second between checks
+#  s  = Use "smart" inter-check delay calculation
 #       x.xx    = Use an inter-check delay of x.xx seconds
 
 host_inter_check_delay_method=s
@@ -466,7 +507,10 @@ max_concurrent_checks=0
 # HOST AND SERVICE CHECK REAPER FREQUENCY
 # This is the frequency (in seconds!) that Icinga will process
 # the results of host and service checks.
+# Lower this value in larger environments to allow faster
+# check result processing (requires more cpu power).
 
+#check_result_reaper_frequency=1
 check_result_reaper_frequency=10
 
 
@@ -490,7 +534,7 @@ max_check_result_reaper_time=30
 # Note: Make sure that only one instance of Icinga has access
 # to this directory!
 
-check_result_path=<%= scope.lookupvar('icinga::vardir_server') -%>/checkresults
+check_result_path=/var/spool/icinga/checkresults
 
 
 
@@ -633,7 +677,12 @@ sleep_time=0.25
 # service checks, host checks, event handlers, notifications, the
 # ocsp command, and performance data commands.  All values are in
 # seconds.
+# Increase the timeout values in case you are experiencing a lot
+# of check timeouts. Addons like e.g. check_mk will perform
+# one combined active servicecheck which could take longer than
+# the default of 60sec.
 
+#service_check_timeout=120
 service_check_timeout=60
 host_check_timeout=30
 event_handler_timeout=30
@@ -665,7 +714,7 @@ retain_state_information=1
 # This file is used only if the retain_state_information
 # variable is set to 1.
 
-state_retention_file=<%= scope.lookupvar('icinga::vardir_server') -%>/retention.dat
+state_retention_file=/var/spool/icinga/retention.dat
 
 
 
@@ -691,7 +740,7 @@ state_retention_file=<%= scope.lookupvar('icinga::vardir_server') -%>/retention.
 # If the file does not exist, no error will appear.
 # There is also an API that will force a read of the sync file.
 
-#sync_retention_file=<%= scope.lookupvar('icinga::vardir_server') -%>/sync.dat
+#sync_retention_file=/var/spool/icinga/sync.dat
 
 
 
@@ -715,6 +764,15 @@ retention_update_interval=60
 # to 0.
 
 use_retained_program_state=1
+
+
+# DUMP RETAINED HOST SERVICE STATES TO NEB
+# This setting determines wether or not Icinga will dump host
+# and service states based on the values saved in the retention
+# file to the neb modules. If you don't want that, use at your
+# own risk and disable it
+
+dump_retained_host_service_states_to_neb=1
 
 
 
@@ -857,14 +915,14 @@ enable_event_handlers=1
 # performance data.
 # Values: 1 = process performance data, 0 = do not process performance data
 
-process_performance_data=1
+process_performance_data=0
 
 
 
 # HOST AND SERVICE PERFORMANCE DATA PROCESSING COMMANDS
 # These commands are run after every host and service check is
 # performed.  These commands are executed only if the
-# enable_performance_data option (above) is set to 1.  The command
+# process_performance_data option (above) is set to 1.  The command
 # argument is the short name of a command definition that you
 # define in your host configuration file.  Read the HTML docs for
 # more information on performance data.
@@ -877,13 +935,10 @@ process_performance_data=1
 # HOST AND SERVICE PERFORMANCE DATA FILES
 # These files are used to store host and service performance data.
 # Performance data is only written to these files if the
-# enable_performance_data option (above) is set to 1.
+# process_performance_data option (above) is set to 1.
 
 #host_perfdata_file=/tmp/host-perfdata
 #service_perfdata_file=/tmp/service-perfdata
-
-host_perfdata_file=/usr/local/pnp4nagios/var/host-perfdata
-service_perfdata_file=/usr/local/pnp4nagios/var/service-perfdata
 
 
 
@@ -899,9 +954,6 @@ service_perfdata_file=/usr/local/pnp4nagios/var/service-perfdata
 #service_perfdata_file_template=[SERVICEPERFDATA]\t$TIMET$\t$HOSTNAME$\t$SERVICEDESC$\t$SERVICEEXECUTIONTIME$\t$SERVICELATENCY$\t$SERVICEOUTPUT$\t$SERVICEPERFDATA$
 
 
-host_perfdata_file_template=DATATYPE::HOSTPERFDATA\tTIMET::$TIMET$\tHOSTNAME::$HOSTNAME$\tHOSTPERFDATA::$HOSTPERFDATA$\tHOSTCHECKCOMMAND::$HOSTCHECKCOMMAND$\tHOSTSTATE::$HOSTSTATE$\tHOSTSTATETYPE::$HOSTSTATETYPE$
-service_perfdata_file_template=DATATYPE::SERVICEPERFDATA\tTIMET::$TIMET$\tHOSTNAME::$HOSTNAME$\tSERVICEDESC::$SERVICEDESC$\tSERVICEPERFDATA::$SERVICEPERFDATA$\tSERVICECHECKCOMMAND::$SERVICECHECKCOMMAND$\tHOSTSTATE::$HOSTSTATE$\tHOSTSTATETYPE::$HOSTSTATETYPE$\tSERVICESTATE::$SERVICESTATE$\tSERVICESTATETYPE::$SERVICESTATETYPE
-
 
 # HOST AND SERVICE PERFORMANCE DATA FILE MODES
 # This option determines whether or not the host and service
@@ -910,8 +962,8 @@ service_perfdata_file_template=DATATYPE::SERVICEPERFDATA\tTIMET::$TIMET$\tHOSTNA
 # pipe ("p") mode which avoid blocking at startup, otherwise you will
 # likely want the defult append ("a") mode.
 
-host_perfdata_file_mode=a
-service_perfdata_file_mode=a
+#host_perfdata_file_mode=a
+#service_perfdata_file_mode=a
 
 
 
@@ -921,8 +973,8 @@ service_perfdata_file_mode=a
 # below.  A value of 0 indicates the files should not be periodically
 # processed.
 
-host_perfdata_file_processing_interval=15
-service_perfdata_file_processing_interval=15
+#host_perfdata_file_processing_interval=0
+#service_perfdata_file_processing_interval=0
 
 
 
@@ -931,8 +983,37 @@ service_perfdata_file_processing_interval=15
 # service performance data files.  The interval at which the
 # processing occurs is determined by the options above.
 
-host_perfdata_file_processing_command=process-host-perfdata-file
-service_perfdata_file_processing_command=process-service-perfdata-file
+#host_perfdata_file_processing_command=process-host-perfdata-file
+#service_perfdata_file_processing_command=process-service-perfdata-file
+
+
+# HOST AND SERVICE PERFORMANCE DATA PROCESS EMPTY RESULTS
+# THese options determine wether the core will process empty perfdata
+# results or not. This is needed for distributed monitoring, and intentionally
+# turned on by default.
+# If you don't require empty perfdata - saving some cpu cycles
+# on unwanted macro calculation - you can turn that off. Be careful!
+# Values: 1 = enable, 0 = disable
+
+#host_perfdata_process_empty_results=1
+#service_perfdata_process_empty_results=1
+
+
+
+# ALLOW EMPTY HOSTGROUP ASSIGMENT FOR SERVICES
+# This boolean option determines whether services assigned to empty
+# host groups (host groups with no host members) will cause Icinga to
+# exit with error on start up (or during a configuration check) or not.
+# It's useful to be able to assign services to empty hostgroups when
+# configuration files or pre-cached object files are distributed to
+# various pollers, or when the process of generating Icinga config is
+# automated, or when a set of services is slowly being phased out but
+# should be kept around.
+# The default behavior if the option is not present in the main
+# configuration file is for Icinga to exit with error if services are
+# associated with host groups that have no hosts associated with them.
+
+#allow_empty_hostgroup_assignment=0
 
 
 
@@ -1128,10 +1209,10 @@ high_host_flap_threshold=20.0
 # DATE FORMAT OPTION
 # This option determines how short dates are displayed. Valid options
 # include:
-#	us		(MM-DD-YYYY HH:MM:SS)
-#	euro    	(DD-MM-YYYY HH:MM:SS)
-#	iso8601		(YYYY-MM-DD HH:MM:SS)
-#	strict-iso8601	(YYYY-MM-DDTHH:MM:SS)
+#  us    (MM-DD-YYYY HH:MM:SS)
+#  euro      (DD-MM-YYYY HH:MM:SS)
+#  iso8601    (YYYY-MM-DD HH:MM:SS)
+#  strict-iso8601  (YYYY-MM-DDTHH:MM:SS)
 #
 
 date_format=us
@@ -1164,8 +1245,7 @@ date_format=us
 # embedded Perl interpreter) is located.  If you didn't compile
 # Icinga with embedded Perl support, this option has no effect.
 
-#p1_file=/usr/bin/p1.pl
-p1_file=<%= scope.lookupvar('icinga::usrlib') %>/icinga/p1.pl
+p1_file=/usr/lib64/icinga/p1.pl
 
 
 
@@ -1173,9 +1253,13 @@ p1_file=<%= scope.lookupvar('icinga::usrlib') %>/icinga/p1.pl
 # This option determines whether or not the embedded Perl interpreter
 # will be enabled during runtime.  This option has no effect if Icinga
 # has not been compiled with support for embedded Perl.
+# This option is intentionally disabled by default, because embedded
+# perl can cause memory leaks and make Icinga unstable if not properly
+# used.
+# Only enable this setting when you really know what you are doing!
 # Values: 0 = disable interpreter, 1 = enable interpreter
 
-enable_embedded_perl=1
+enable_embedded_perl=0
 
 
 
@@ -1187,6 +1271,27 @@ enable_embedded_perl=1
 # information on how this option works.
 
 use_embedded_perl_implicitly=1
+
+
+
+# EVENT HANDLERS FOR STALKED HOSTS/SERVICES
+# Allow running event handlers for stalked hosts/services in order
+# to forward to external systems.
+# Values: 0 = disabled (default), 1 = enabled
+
+stalking_event_handlers_for_hosts=0
+stalking_event_handlers_for_services=0
+
+
+
+# NOTIFICATIONS FOR STALKED HOSTS/SERVICES
+# Allow notifications for stalked hosts/services globally
+# for all contacts in order to notify about a stalking
+# alert.
+# Values: 0 = disabled (default), 1 = enabled
+
+stalking_notifications_for_hosts=0
+stalking_notifications_for_services=0
 
 
 
@@ -1205,14 +1310,14 @@ illegal_object_name_chars=`~!$%^&*|'"<>?,()=
 # handlers, etc.  This DOES NOT affect macros used in service or
 # host check commands.
 # The following macros are stripped of the characters you specify:
-#	$HOSTOUTPUT$
-#	$HOSTPERFDATA$
-#	$HOSTACKAUTHOR$
-#	$HOSTACKCOMMENT$
-#	$SERVICEOUTPUT$
-#	$SERVICEPERFDATA$
-#	$SERVICEACKAUTHOR$
-#	$SERVICEACKCOMMENT$
+#  $HOSTOUTPUT$
+#  $HOSTPERFDATA$
+#  $HOSTACKAUTHOR$
+#  $HOSTACKCOMMENT$
+#  $SERVICEOUTPUT$
+#  $SERVICEPERFDATA$
+#  $SERVICEACKAUTHOR$
+#  $SERVICEACKCOMMENT$
 
 illegal_macro_output_chars=`~$&|'"<>
 
@@ -1286,8 +1391,10 @@ use_large_installation_tweaks=0
 # executed.  Enabling this option can cause performance issues in
 # large installations, as it will consume a bit more memory and (more
 # importantly) consume more CPU.
-# Values: 1 - Enable environment variable macros (default)
-#         0 - Disable environment variable macros
+# Keep in mind that various addons/plugins will require this setting
+# to be enabled (e.g. check_oracle_health) for special usage.
+# Values: 1 - Enable environment variable macros
+#         0 - Disable environment variable macros (default)
 
 enable_environment_macros=1
 
@@ -1325,18 +1432,18 @@ enable_environment_macros=1
 # be written to the debug file.  OR values together to log multiple
 # types of information.
 # Values:
-#          -1 = Everything
-#          0 = Nothing
-#	   1 = Functions
-#          2 = Configuration
-#          4 = Process information
-#	   8 = Scheduled events
-#          16 = Host/service checks
-#          32 = Notifications
-#          64 = Event broker
-#          128 = External commands
-#          256 = Commands
-#          512 = Scheduled downtime
+#          -1   = Everything
+#          0    = Nothing
+#          1    = Functions
+#          2    = Configuration
+#          4    = Process information
+#          8    = Scheduled events
+#          16   = Host/service checks
+#          32   = Notifications
+#          64   = Event broker
+#          128  = External commands
+#          256  = Commands
+#          512  = Scheduled downtime
 #          1024 = Comments
 #          2048 = Macros
 
@@ -1350,14 +1457,14 @@ debug_level=0
 #         1 = More detailed
 #         2 = Very detailed
 
-debug_verbosity=1
+debug_verbosity=2
 
 
 
 # DEBUG FILE
 # This option determines where Icinga should write debugging information.
 
-debug_file=<%= scope.lookupvar('icinga::logdir_server') -%>/icinga.debug
+debug_file=/var/log/icinga/icinga.debug
 
 
 
@@ -1368,11 +1475,14 @@ debug_file=<%= scope.lookupvar('icinga::logdir_server') -%>/icinga.debug
 # automatically be deleted.  This helps ensure your disk space usage doesn't
 # get out of control when debugging Icinga.
 
-max_debug_file_size=1000000
+# 100M
+max_debug_file_size=100000000
+
+
 
 # EVENT PROFILING
 # This option enables or disables event profiling for stats of event counts
-# and time taken for events.
+# and time taken for events.  Option can't be used on Solaris with gcc3.
 # Values: 0 - disabled
 #         1 - enabled
 

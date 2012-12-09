@@ -120,7 +120,7 @@ class icinga::params {
       $client_user               = 'nagios'
       $client_group              = 'nagios'
       $server_cmd_group          = 'icingacmd'
-      $htpasswd_file             = "${confdir_server}/htpasswd.users"
+      $htpasswd_file             = "${confdir_server}/passwd"
       $targetdir                 = "${confdir_server}/objects"
       $targetdir_contacts        = "${targetdir}/contacts/contacts.cfg"
       $icinga_vhost              = '/etc/httpd/conf.d/icinga.conf'

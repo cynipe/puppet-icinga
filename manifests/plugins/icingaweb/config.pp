@@ -15,9 +15,9 @@ class icinga::plugins::icingaweb::config {
       content => template('icinga/plugins/icingaweb/httpd.conf.erb'),
       notify  => Service[$::icinga::service_webserver];
 
-    "${::icinga::icingaweb_confdir}/conf.d/databases.xml":
+    "/etc/icinga-web/conf.d/databases.xml":
       ensure => present,
-      content => template('icinga/plugins/icingaweb/databases.xml'),
+      content => template('icinga/plugins/icingaweb/databases.xml.erb'),
       notify => Exec['icingaweb-db-tables'];
   }
 
