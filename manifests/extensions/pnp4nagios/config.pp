@@ -1,14 +1,14 @@
-# == Class: icinga::plugins::pnp4nagios::config
+# == Class: icinga::extensions::pnp4nagios::config
 #
 # This class provides the pnp4nagios plugin's configuration.
 #
-class icinga::plugins::pnp4nagios::config {
+class icinga::extensions::pnp4nagios::config {
   File {
     owner   => $::icinga::server_user,
     group   => $::icinga::server_group,
     require => [
       Class['icinga::config'],
-      Class['icinga::plugins::pnp4nagios::install'],
+      Class['icinga::extensions::pnp4nagios::install'],
     ],
     notify  => [
       Service[$::icinga::service_server],
@@ -59,12 +59,12 @@ class icinga::plugins::pnp4nagios::config {
       ensure => directory;
 
     $vhost:
-      ensure  => $::icinga::plugins::pnp4nagios::ensure,
-      content => template('icinga/plugins/pnp4nagios/pnp4nagios.conf.erb');
+      ensure  => $::icinga::extensions::pnp4nagios::ensure,
+      content => template('icinga/extensions/pnp4nagios/pnp4nagios.conf.erb');
 
     "${::icinga::targetdir}/commands-perfdata.cfg":
-      ensure  => $::icinga::plugins::pnp4nagios::ensure,
-      content => template('icinga/plugins/pnp4nagios/commands-perfdata.cfg.erb');
+      ensure  => $::icinga::extensions::pnp4nagios::ensure,
+      content => template('icinga/extensions/pnp4nagios/commands-perfdata.cfg.erb');
   }
 }
 

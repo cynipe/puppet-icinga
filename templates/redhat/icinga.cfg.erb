@@ -33,36 +33,7 @@ log_file=/var/log/icinga/icinga.log
 # cfg_dir directive as shown below with conf.d
 
 cfg_dir=/etc/icinga/conf.d
-
-# or you can split your object definitions across several config files
-# and include them one by one - see the provided sample config
-# in objects/
-#
-# ATTENTION: do not mix cfg_file and cfg_dir such as
-# cfg_file=foo/bar.cfg
-# cfg_dir=foo
-# this will include bar.cfg 2 times and lead to config verification errors.
-
-# You can specify individual object config files as shown below:
-cfg_file=/etc/icinga/objects/commands.cfg
-cfg_file=/etc/icinga/objects/contacts.cfg
-cfg_file=/etc/icinga/objects/timeperiods.cfg
-cfg_file=/etc/icinga/objects/templates.cfg
-
-# Definitions for monitoring the local (Linux) host
-cfg_file=/etc/icinga/objects/localhost.cfg
-
-# Definitions for monitoring a Windows machine
-#cfg_file=/etc/icinga/objects/windows.cfg
-
-# Definitions for monitoring a router/switch
-#cfg_file=/etc/icinga/objects/switch.cfg
-
-# Definitions for monitoring a network printer
-#cfg_file=/etc/icinga/objects/printer.cfg
-
-# Definitions for ido2db process checks
-#cfg_file=/etc/icinga/objects/ido2db_check_proc.cfg
+cfg_dir=/etc/icinga/objects
 
 # Definitions for broker modules like idoutils.cfg
 cfg_dir=/etc/icinga/modules

@@ -1,4 +1,4 @@
-class icinga::plugins::icingaweb::config {
+class icinga::extensions::icingaweb::config {
   File {
     owner => $icinga::webserver_user,
     group => $icinga::webserver_group,
@@ -12,12 +12,12 @@ class icinga::plugins::icingaweb::config {
   file {
     $::icinga::icingaweb_vhost:
       ensure  => present,
-      content => template('icinga/plugins/icingaweb/httpd.conf.erb'),
+      content => template('icinga/extensions/icingaweb/httpd.conf.erb'),
       notify  => Service[$::icinga::service_webserver];
 
     "/etc/icinga-web/conf.d/databases.xml":
       ensure => present,
-      content => template('icinga/plugins/icingaweb/databases.xml.erb'),
+      content => template('icinga/extensions/icingaweb/databases.xml.erb'),
       notify => Exec['icingaweb-db-tables'];
   }
 

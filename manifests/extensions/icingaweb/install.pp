@@ -1,4 +1,4 @@
-class icinga::plugins::icingaweb::install {
+class icinga::extensions::icingaweb::install {
   package {
     $icinga::icingaweb_pkg_dep:
       ensure => present;
