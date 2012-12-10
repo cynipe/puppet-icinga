@@ -9,14 +9,17 @@ class icinga::params {
   # $version = ${::icinga_version}
   $version                     = '1.7.2'
   $manage_repo                 = false
+  $use_storedconfigs           = false
   $client                      = true
   $server                      = false
   $use_auth                    = true
+  $extensions                  = [ 'idoutils', 'icingaweb' ]
   $plugins                     = [ 'checkpuppet' ]
   $nrpe_allowed_hosts          = [ '127.0.0.1,', $::ipaddress ]
   $nrpe_server_address         = $::ipaddress
-  $icinga_admins               = '*'
+  $icinga_admins               = [ '*' ]
   $collect_hostname            = $::fqdn
+  $collect_ipaddress           = $::ipaddress
   $notification_cmd_host       = 'notify-host-by-email'
   $notification_cmd_service    = 'notify-service-by-email'
   $notification_period         = '24x7'
@@ -103,15 +106,6 @@ class icinga::params {
       $service_server_enable     = true
       $service_server_hasstatus  = true
       $service_server_hasrestart = true
-      $pidfile_client            = '/var/run/nrpe/nrpe.pid'
-      $pidfile_server            = ''
-      $confdir_client            = '/etc/nagios'
-      $confdir_server            = '/etc/icinga'
-      $vardir_client             = '/var/icinga'
-      $vardir_server             = '/var/icinga'
-      $sharedir_server           = '/usr/share/icinga'
-      $includedir_client         = '/etc/nrpe.d'
-      $plugindir                 = "${usrlib}/nagios/plugins"
       $service_webserver         = 'httpd'
       $webserver_user            = 'apache'
       $webserver_group           = 'apache'
@@ -120,12 +114,9 @@ class icinga::params {
       $client_user               = 'nagios'
       $client_group              = 'nagios'
       $server_cmd_group          = 'icingacmd'
-      $htpasswd_file             = "${confdir_server}/passwd"
-      $targetdir                 = "${confdir_server}/objects"
-      $targetdir_contacts        = "${targetdir}/contacts/contacts.cfg"
+      $htpasswd_file             = "/etc/icinga/passwd"
+      $targetdir                 = "/etc/icinga/objects"
       $icinga_vhost              = '/etc/httpd/conf.d/icinga.conf'
-      $logdir_client             = '/var/log/nrpe'
-      $logdir_server             = '/var/log/icinga'
 
 
       # Plugin: Icinga Web

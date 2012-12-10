@@ -50,19 +50,25 @@ define icinga::user (
       }
     }
 
-    @@nagios_contact { $name:
+    Nagios_contact {
       ensure                        => $ensure,
       can_submit_commands           => $can_submit_commands,
       contact_name                  => $contact_name,
       email                         => $email,
       pager                         => $pager,
-      target                        => $target,
+      target                        => "${target}/contacts.cfg",
       host_notification_commands    => $host_notification_commands,
       host_notification_period      => $host_notification_period,
       host_notifications_enabled    => $host_notifications_enabled,
       service_notification_commands => $service_notification_commands,
       service_notification_period   => $service_notification_period,
       service_notifications_enabled => $service_notifications_enabled,
+    }
+
+    if $::icinga::use_storedconfigs {
+      @@nagios_contact { $name: }
+    } else {
+      @nagios_contact { $name: }
     }
   }
 }

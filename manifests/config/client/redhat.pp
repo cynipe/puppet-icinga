@@ -11,24 +11,24 @@ class icinga::config::client::redhat {
   }
 
   file {
-    $::icinga::confdir_client:
+    '/etc/nagios':
       ensure  => directory,
       recurse => true;
 
-    $::icinga::plugindir:
+    "${::icinga::usrlib}/nagios/plugins":
       ensure => directory;
 
-    "${::icinga::confdir_client}/nrpe.cfg":
+    "/etc/nagios/nrpe.cfg":
       ensure  => present,
       content => template('icinga/redhat/nrpe.cfg.erb');
 
-    $::icinga::logdir_client:
+    '/var/log/nrpe':
       ensure => directory;
 
-    $::icinga::includedir_client:
+    '/etc/nrpe.d':
       ensure => directory;
 
-    "${::icinga::includedir_client}/default.cfg":
+    "/etc/nrpe.d/default.cfg":
       ensure  => present,
       content => template('icinga/redhat/nrpe_default.cfg.erb');
   }

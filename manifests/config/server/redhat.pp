@@ -12,16 +12,15 @@ class icinga::config::server::redhat {
         Service[$::icinga::service_client],
         Service[$::icinga::service_server],
         Group[$::icinga::server_cmd_group],
-        Exec['fix_collected_permissions']
+        Exec['fix_permissions_objects']
       ],
     }
 
-    exec { 'fix_collected_permissions':
-      # temporary work-around
+    exec { 'fix_permissions_objects':
       command     => "chown -R ${::icinga::server_user}:${::icinga::server_group} .",
       cwd         => $icinga::params::targetdir,
-      notify      => Service[$::icinga::service_server],
       require     => File[$::icinga::targetdir],
+      notify      => Service[$::icinga::service_server],
       refreshonly => true,
     }
 
@@ -34,6 +33,18 @@ class icinga::config::server::redhat {
       $::icinga::htpasswd_file:
         ensure => present,
         mode   => '0644';
+
+      "/etc/icinga/objects":
+        ensure  => directory,
+        recurse => true,
+        purge   => true,
+        mode    => '0644';
+
+      "${::icinga::params::targetdir}/hosts":
+        ensure  => directory;
+
+      "${::icinga::params::targetdir}/services":
+        ensure  => directory;
 
       "/etc/icinga/cgi.cfg":
         ensure  => present,
@@ -71,10 +82,6 @@ class icinga::config::server::redhat {
         ensure  => present,
         content => template('icinga/redhat/timeperiods.cfg.erb');
 
-      "/etc/icinga/objects/templates.cfg":
-        ensure  => present,
-        content => template('icinga/redhat/templates.cfg.erb');
-
       "/usr/share/icinga/images/logos":
         ensure  => directory;
 
@@ -82,6 +89,7 @@ class icinga::config::server::redhat {
         ensure  => directory,
         recurse => true,
         source  => 'puppet:///modules/icinga/img-os';
+
     }
   }
 }

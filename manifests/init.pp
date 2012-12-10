@@ -112,21 +112,30 @@ class icinga (
   $collect_ipaddress         = $::icinga::params::collect_ipaddress
 ) inherits icinga::params {
 
-  # motd::register { 'icinga-refactor': }
-
   include icinga::preinstall
   include icinga::install
   include icinga::config
-  include icinga::plugins
-  include icinga::collect
+  include icinga::extensions
   include icinga::service
 
-  Class['icinga::preinstall'] ->
-  Class['icinga::install'] ->
-  Class['icinga::config'] ->
-  Class['icinga::plugins'] ->
-  Class['icinga::collect'] ->
-  Class['icinga::service']
+  if $use_storedconfigs {
+    include icinga::collect
+    Class['icinga::preinstall'] ->
+    Class['icinga::install'] ->
+    Class['icinga::config'] ->
+    Class['icinga::extensions'] ->
+    Class['icinga::collect'] ->
+    Class['icinga::service']
+  }
+  else {
+    include icinga::realize
+    Class['icinga::preinstall'] ->
+    Class['icinga::install'] ->
+    Class['icinga::config'] ->
+    Class['icinga::extensions'] ->
+    Class['icinga::realize'] ->
+    Class['icinga::service']
+  }
 
   # Live fast, die young.
   case $::operatingsystem {
