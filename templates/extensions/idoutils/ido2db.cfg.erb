@@ -21,8 +21,8 @@ lock_file=/var/run/ido2db.pid
 # These options determine the user/group that the daemon should run as.
 # You can specify a number (uid/gid) or a name for either option.
 
-ido2db_user=<%= scope.lookupvar('icinga::server_user') %>
-ido2db_group=<%= scope.lookupvar('icinga::server_group') %>
+ido2db_user=<%= scope.lookupvar('icinga::server::server_user') %>
+ido2db_group=<%= scope.lookupvar('icinga::server::server_group') %>
 
 
 
@@ -134,7 +134,7 @@ db_port=3306
 # 	//DBSERVER/SID
 #	SID
 
-db_name=<%= scope.lookupvar('icinga::idoutils_dbname') %>
+db_name=<%= scope.lookupvar('icinga::server::idoutils_dbname') %>
 
 
 
@@ -155,8 +155,8 @@ db_prefix=icinga_
 # The user needs at least SELECT, INSERT, UPDATE, and DELETE privileges on
 # the database.
 
-db_user=<%= scope.lookupvar('icinga::idoutils_dbuser') %>
-db_pass=<%= scope.lookupvar('icinga::idoutils_dbpass') %>
+db_user=<%= scope.lookupvar('icinga::server::idoutils_dbuser') %>
+db_pass=<%= scope.lookupvar('icinga::server::idoutils_dbpass') %>
 
 
 
@@ -314,7 +314,7 @@ oci_errors_to_syslog=1
 
 # ORACLE TRACE LEVEL
 # This setting activates oracle session trace for each ido2db connection using trace event
-# Level value must be one of the currently supported values (1,4,8,12) or 0 for off 
+# Level value must be one of the currently supported values (1,4,8,12) or 0 for off
 # this requires explicit "alter session" privilege
 # select rights to v$session and v$process are recommanded
 # 0 - pseudo level TRACE OFF

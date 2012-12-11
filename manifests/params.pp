@@ -9,10 +9,8 @@ class icinga::params {
   # $version = ${::icinga_version}
   $version                     = '1.7.2'
   $manage_repo                 = false
-  $use_storedconfigs           = false
-  $client                      = true
-  $server                      = false
   $use_auth                    = true
+  $use_storedconfigs           = false
   $extensions                  = [ 'idoutils', 'icingaweb' ]
   $plugins                     = [ 'checkpuppet' ]
   $nrpe_allowed_hosts          = [ '127.0.0.1,', $::ipaddress ]
@@ -36,20 +34,17 @@ class icinga::params {
       #}
       #
       #$package_client_ensure     = 'present'
-      #$package_server_ensure     = 'present'
+      #$server_package_ensure     = 'present'
       #$package_client            = [ 'nagios-nrpe-server', 'nagios-plugins' ]
-      #$package_server            = [ 'icinga', 'icinga-api', 'icinga-doc', 'icinga-gui', 'nagios-plugins-nrpe' ]
+      #$server_package            = [ 'icinga', 'icinga-api', 'icinga-doc', 'icinga-gui', 'nagios-plugins-nrpe' ]
       #$service_client            = 'nagios-nrpe-server'
       #$service_client_ensure     = 'running'
       #$service_client_enable     = true
       #$service_client_hasstatus  = false
       #$service_client_hasrestart = true
       #$service_client_pattern    = 'nrpe'
-      #$service_server            = 'icinga'
-      #$service_server_ensure     = 'running'
-      #$service_server_enable     = true
-      #$service_server_hasstatus  = true
-      #$service_server_hasrestart = true
+      #$server_service            = 'icinga'
+      #$server_service_ensure     = 'running'
       #$pidfile_client            = '/var/run/nagios/nrpe.pid'
       #$pidfile_server            = '/var/run/icinga/icinga.pid'
       #$confdir_client            = '/etc/nagios'
@@ -60,7 +55,7 @@ class icinga::params {
       #$includedir_client         = '/etc/nagios/nrpe.d'
       #$usrlib                    = '/usr/lib'
       #$plugindir                 = "${usrlib}/nagios/plugins"
-      #$service_webserver         = 'apache2'
+      #$webserver_service         = 'apache2'
       #$webserver_user            = 'www-data'
       #$webserver_group           = 'www-data'
       #$server_user               = 'nagios'
@@ -91,35 +86,27 @@ class icinga::params {
       }
 
       # Icinga
-      $package_client_ensure     = 'present'
-      $package_server_ensure     = 'present'
-      $package_client            = [ 'nrpe', 'nagios-plugins', 'nagios-plugins-all' ]
-      $package_server            = [ 'icinga', 'icinga-gui', 'icinga-doc', 'nagios-plugins-nrpe' ]
-      $service_client            = 'nrpe'
-      $service_client_ensure     = 'running'
-      $service_client_enable     = true
-      $service_client_hasstatus  = true
-      $service_client_hasrestart = true
-      $service_client_pattern    = ''
-      $service_server            = 'icinga'
-      $service_server_ensure     = 'running'
-      $service_server_enable     = true
-      $service_server_hasstatus  = true
-      $service_server_hasrestart = true
-      $service_webserver         = 'httpd'
-      $webserver_user            = 'apache'
-      $webserver_group           = 'apache'
+      $server_package            = [ 'icinga', 'icinga-gui', 'icinga-doc', 'nagios-plugins-nrpe' ]
+      $server_service            = 'icinga'
+      $server_service_ensure     = 'running'
       $server_user               = 'icinga'
       $server_group              = 'icinga'
-      $client_user               = 'nagios'
-      $client_group              = 'nagios'
       $server_cmd_group          = 'icingacmd'
       $htpasswd_file             = "/etc/icinga/passwd"
       $targetdir                 = "/etc/icinga/objects"
+
+      $webserver_service         = 'httpd'
+      $webserver_user            = 'apache'
+      $webserver_group           = 'apache'
       $icinga_vhost              = '/etc/httpd/conf.d/icinga.conf'
 
+      # Client
+      $client_package            = [ 'nrpe', 'nagios-plugins', 'nagios-plugins-all' ]
+      $client_user               = 'nagios'
+      $client_group              = 'nagios'
+      $client_service            = 'nrpe'
 
-      # Plugin: Icinga Web
+      # Extension: Icinga Web
       $icingaweb_pkg     = [ 'icinga-web' ]
       $icingaweb_pkg_dep = [ 'php-xml', 'php-xmlrpc', 'php-soap', 'php-mysql' ]
       $icingaweb_sharedir = '/usr/share/icinga-web'
@@ -130,7 +117,7 @@ class icinga::params {
       $icingaweb_dbpass  = 'icinga_web'
       $icingaweb_vhost   = '/etc/httpd/conf.d/icinga-web.conf'
 
-      # Plugin: IDOUtils
+      # Extension: IDOUtils
       $idoutils_pkg        = 'icinga-idoutils-libdbi-mysql'
       $idoutils_service = 'ido2db'
       $idoutils_dbsql     = "/usr/share/doc/icinga-idoutils-libdbi-mysql-${version}/db/mysql/mysql.sql"

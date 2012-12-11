@@ -2,9 +2,9 @@
 # Managed by Puppet
 #
 
-Alias /pnp4nagios "<%= scope.lookupvar('::icinga::plugins::pnp4nagios::config::htmldir') %>/"
+Alias /pnp4nagios "<%= scope.lookupvar('::icinga::server::extensions::pnp4nagios::config::htmldir') %>/"
 
-<Directory "<%= scope.lookupvar('::icinga::plugins::pnp4nagios::config::htmldir') %>/">
+<Directory "<%= scope.lookupvar('::icinga::server::extensions::pnp4nagios::config::htmldir') %>/">
   AllowOverride None
   Order allow,deny
   Allow from all
@@ -13,12 +13,12 @@ Alias /pnp4nagios "<%= scope.lookupvar('::icinga::plugins::pnp4nagios::config::h
   #
   #
   #
-  <% if scope.lookupvar('::icinga::use_auth') %>
+  <% if scope.lookupvar('::icinga::server::use_auth') %>
   AuthName "Icinga Access"
   AuthType Basic
-  AuthUserFile <%= scope.lookupvar('::icinga::htpasswd_file') %>
+  AuthUserFile <%= scope.lookupvar('::icinga::server::htpasswd_file') %>
   Require valid-user
-  <% end %> 
+  <% end %>
 
   <IfModule mod_rewrite.c>
     # Turn on URL rewriting

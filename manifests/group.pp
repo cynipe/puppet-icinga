@@ -9,19 +9,17 @@ define icinga::group (
   $target               = $::icinga::targetdir_contacts
 ) {
 
-  if $::icinga::server {
-    Nagios_contactgroup {
-      ensure               => $ensure,
-      contactgroup_name    => $contactgroup_name,
-      contactgroup_members => $contactgroup_members,
-      target               => $target,
-    }
+  Nagios_contactgroup {
+    ensure               => $ensure,
+    contactgroup_name    => $contactgroup_name,
+    contactgroup_members => $contactgroup_members,
+    target               => $target,
+  }
 
-    if $::icinga::use_storedconfigs  {
-      @@nagios_contactgroup { $name: }
-    } else {
-      @nagios_contactgroup { $name: }
-    }
+  if $::icinga::use_storedconfigs  {
+    @@nagios_contactgroup { $name: }
+  } else {
+    @nagios_contactgroup { $name: }
   }
 }
 

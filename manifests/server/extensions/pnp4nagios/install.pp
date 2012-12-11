@@ -1,8 +1,8 @@
-# == Class: icinga::extensions::pnp4nagios::install
+# == Class: icinga::server::extensions::pnp4nagios::install
 #
 # This class provides the pnp4nagios plugin's installation.
 #
-class icinga::extensions::pnp4nagios::install {
+class icinga::server::extensions::pnp4nagios::install {
   case $::operatingsystem {
     /Debian|Ubuntu/: {
       $package = $::lsbdistcodename ? {

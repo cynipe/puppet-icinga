@@ -1,14 +1,12 @@
 define icinga::host(
-  $hostname = $name,
-  $fqdn,
-  $ipaddress,
-  $operatingsystem    = $::operatingsystem,
-  $max_check_attempts = $::icinga::max_check_attempts,
-  $targetdir          = $::icinga::targetdir,
-  $notification_period = $::icinga::notification_period
+  $hostname            = $name,
+  $fqdn                = $::icinga::server::collect_hostname,
+  $ipaddress           = $::icinga::server::collect_ipaddress,
+  $operatingsystem     = $::operatingsystem,
+  $max_check_attempts  = $::icinga::params::max_check_attempts,
+  $targetdir           = $::icinga::params::targetdir,
+  $notification_period = $::icinga::params::notification_period
 ) {
-
-  include icinga::params
 
   @nagios_host { $hostname:
     ensure             => present,

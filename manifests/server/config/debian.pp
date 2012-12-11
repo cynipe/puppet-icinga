@@ -1,17 +1,17 @@
-# == Class: icinga::config::server::debian
+# == Class: icinga::server::config::debian
 #
 # This class provides server configuration for Debian and derivative distro's.
 #
-class icinga::config::server::debian {
-  if $::icinga::server {
+class icinga::server::config::debian {
+  if $icinga::server::server {
     File {
-      owner   => $::icinga::server_user,
-      group   => $::icinga::server_group,
+      owner   => $icinga::server::server_user,
+      group   => $icinga::server::server_group,
       require => Class['icinga::config'],
       notify  => [
-        Service[$::icinga::service_client],
-        Service[$::icinga::service_server],
-        Group[$::icinga::server_cmd_group]
+        Service[$icinga::server::service_client],
+        Service[$icinga::server::server_service],
+        Group[$icinga::server::server_cmd_group]
       ],
     }
 
@@ -22,17 +22,17 @@ class icinga::config::server::debian {
     }
 
     file {
-      $::icinga::confdir_server:
+      $icinga::server::confdir_server:
         ensure => present;
 
-      $::icinga::htpasswd_file:
+      $icinga::server::htpasswd_file:
         ensure => present,
         mode   => '0644';
 
-      $::icinga::icinga_vhost:
+      $icinga::server::icinga_vhost:
         ensure  => present,
         content => template('icinga/debian/apache2.conf'),
-        notify  => Service[$::icinga::service_webserver];
+        notify  => Service[$icinga::server::webserver_service];
 
       "${::icinga::confdir_server}/objects":
         ensure => directory;

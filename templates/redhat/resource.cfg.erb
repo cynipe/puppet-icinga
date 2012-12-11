@@ -23,10 +23,10 @@
 ###########################################################################
 
 # Sets $USER1$ to be the path to the plugins
-$USER1$=<%= scope.lookupvar('icinga::usrlib') %>/nagios/plugins
+$USER1$=<%= scope.lookupvar('icinga::server::usrlib') %>/nagios/plugins
 
 # Sets $USER2$ to be the path to event handlers
-#$USER2$=<%= scope.lookupvar('icinga::usrlib') %>/nagios/plugins/eventhandlers
+#$USER2$=<%= scope.lookupvar('icinga::server::usrlib') %>/nagios/plugins/eventhandlers
 
 # Store some usernames and passwords (hidden from the CGIs)
 #$USER3$=someuser

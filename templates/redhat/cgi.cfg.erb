@@ -161,7 +161,7 @@ first_day_of_week=0
 # authentication (bad idea), while any other value will make them
 # use the authentication functions (the default).
 
-use_authentication=<%= scope.lookupvar('icinga::use_auth') ? 1 : 0 -%>
+use_authentication=<%= scope.lookupvar('icinga::server::use_auth') ? 1 : 0 -%>
 
 
 
@@ -204,7 +204,7 @@ use_ssl_authentication=0
 # Alternatively you can specify contactgroups too, starting
 # with Icinga 1.5.0
 
-authorized_for_system_information=<%= scope.lookupvar('icinga::icinga_admins').join(',') %>
+authorized_for_system_information=<%= scope.lookupvar('icinga::server::icinga_admins').join(',') %>
 #authorized_contactgroup_for_system_information=
 
 
@@ -218,7 +218,7 @@ authorized_for_system_information=<%= scope.lookupvar('icinga::icinga_admins').j
 # Alternatively you can specify contactgroups too, starting
 # with Icinga 1.5.0
 
-authorized_for_configuration_information=<%= scope.lookupvar('icinga::icinga_admins').join(',') %>
+authorized_for_configuration_information=<%= scope.lookupvar('icinga::server::icinga_admins').join(',') %>
 #authorized_contactgroup_for_configuration_information=
 
 
@@ -231,7 +231,7 @@ authorized_for_configuration_information=<%= scope.lookupvar('icinga::icinga_adm
 # data.
 # Alternatively you can specify contactgroups too.
 
-authorized_for_full_command_resolution=<%= scope.lookupvar('icinga::icinga_admins').join(',') %>
+authorized_for_full_command_resolution=<%= scope.lookupvar('icinga::server::icinga_admins').join(',') %>
 #authorized_contactgroup_for_full_command_resolution=
 
 
@@ -246,7 +246,7 @@ authorized_for_full_command_resolution=<%= scope.lookupvar('icinga::icinga_admin
 # Alternatively you can specify contactgroups too, starting
 # with Icinga 1.5.0
 
-authorized_for_system_commands=<%= scope.lookupvar('icinga::icinga_admins').join(',') %>
+authorized_for_system_commands=<%= scope.lookupvar('icinga::server::icinga_admins').join(',') %>
 #authorized_contactgroup_for_system_commands=
 
 
@@ -261,8 +261,8 @@ authorized_for_system_commands=<%= scope.lookupvar('icinga::icinga_admins').join
 # with Icinga 1.5.0
 
 
-authorized_for_all_services=<%= scope.lookupvar('icinga::icinga_admins').join(',') %>
-authorized_for_all_hosts=<%= scope.lookupvar('icinga::icinga_admins').join(',') %>
+authorized_for_all_services=<%= scope.lookupvar('icinga::server::icinga_admins').join(',') %>
+authorized_for_all_hosts=<%= scope.lookupvar('icinga::server::icinga_admins').join(',') %>
 #authorized_contactgroup_for_all_services=
 #authorized_contactgroup_for_all_hosts=
 
@@ -278,8 +278,8 @@ authorized_for_all_hosts=<%= scope.lookupvar('icinga::icinga_admins').join(',') 
 # Alternatively you can specify contactgroups too, starting
 # with Icinga 1.5.0
 
-authorized_for_all_service_commands=<%= scope.lookupvar('icinga::icinga_admins').join(',') %>
-authorized_for_all_host_commands=<%= scope.lookupvar('icinga::icinga_admins').join(',') %>
+authorized_for_all_service_commands=<%= scope.lookupvar('icinga::server::icinga_admins').join(',') %>
+authorized_for_all_host_commands=<%= scope.lookupvar('icinga::server::icinga_admins').join(',') %>
 #authorized_contactgroup_for_all_service_commands=
 #authorized_contactgroup_for_all_host_commands=
 

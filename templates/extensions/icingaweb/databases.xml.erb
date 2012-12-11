@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<! -- Managed by Puppet -->
+<!-- Managed by Puppet -->
 <!--
     databases.xml
     Defines which databases to use to store internal icinga-data and where to request icinga monitoring status from
@@ -18,7 +18,7 @@
     Overwrite the icinga-web database (where users, roles, views, etc are stored
     -->
     <db:database name="icinga_web" class="AppKitDoctrineDatabase">
-         <ae:parameter name="dsn">mysql://<%= scope.lookupvar('icinga::icingaweb_dbuser') %>:<%= scope.lookupvar('icinga::icingaweb_dbpass') %>@localhost:3306/<%= scope.lookupvar('icinga::icingaweb_dbname') %></ae:parameter>
+         <ae:parameter name="dsn">mysql://<%= scope.lookupvar('icinga::server::icingaweb_dbuser') %>:<%= scope.lookupvar('icinga::server::icingaweb_dbpass') %>@localhost:3306/<%= scope.lookupvar('icinga::server::icingaweb_dbname') %></ae:parameter>
 
         <ae:parameter name="charset">utf8</ae:parameter>
         <ae:parameter name="manager_attributes">
@@ -46,7 +46,7 @@
         EXAMPLE (oracle needs icingaOracle as the db driver)
     -->
     <db:database xmlns="http://agavi.org/agavi/config/parts/databases/1.0" name="icinga" class="IcingaDoctrineDatabase">
-        <ae:parameter name="dsn">mysql://<%= scope.lookupvar('icinga::idoutils_dbuser') %>:<%= scope.lookupvar('icinga::idoutils_dbpass') %>@localhost:3306/<%= scope.lookupvar('icinga::idoutils_dbname') %></ae:parameter>
+        <ae:parameter name="dsn">mysql://<%= scope.lookupvar('icinga::server::idoutils_dbuser') %>:<%= scope.lookupvar('icinga::server::idoutils_dbpass') %>@localhost:3306/<%= scope.lookupvar('icinga::server::idoutils_dbname') %></ae:parameter>
         <ae:parameter name="prefix">icinga_</ae:parameter>
         <ae:parameter name="charset">utf8</ae:parameter>
         <ae:parameter name="use_retained">true</ae:parameter>
