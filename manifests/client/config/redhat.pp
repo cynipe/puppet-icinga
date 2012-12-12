@@ -15,7 +15,7 @@ class icinga::config::client::redhat {
       ensure  => directory,
       recurse => true;
 
-    "${::icinga::usrlib}/nagios/plugins":
+    $::icinga::client::plugindir:
       ensure => directory;
 
     "/etc/nagios/nrpe.cfg":
@@ -26,7 +26,9 @@ class icinga::config::client::redhat {
       ensure => directory;
 
     '/etc/nrpe.d':
-      ensure => directory;
+      ensure  => directory
+      recurse => true,
+      purge   => true;
 
     "/etc/nrpe.d/default.cfg":
       ensure  => present,

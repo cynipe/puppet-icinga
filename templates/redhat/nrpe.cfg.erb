@@ -98,7 +98,7 @@ dont_blame_nrpe=1
 # the nagios user to your /etc/sudoers.  An example entry for alllowing
 # execution of the plugins from might be:
 #
-# nagios          ALL=(ALL) NOPASSWD: <%= scope.lookupvar('icinga::usrlib') %>/nagios/plugins/
+# nagios          ALL=(ALL) NOPASSWD: <%= scope.lookupvar('icinga::plugindir') %>
 #
 # This lets the nagios user run all commands in that directory (and only them)
 # without asking for a password.  If you do this, make sure you don't give
@@ -160,7 +160,7 @@ connection_timeout=300
 # This directive allows you to include definitions from config files (with a
 # .cfg extension) in one or more directories (with recursion).
 
-include_dir=<%= scope.lookupvar('icinga::includedir_client') %>
+include_dir=<%= scope.lookupvar('icinga::client_includedir') %>
 
 
 
@@ -186,18 +186,18 @@ include_dir=<%= scope.lookupvar('icinga::includedir_client') %>
 
 # The following examples use hardcoded command arguments...
 
-command[check_users]=<%= scope.lookupvar('icinga::usrlib') %>/nagios/plugins/check_users -w 5 -c 10
-command[check_ntp_time]=<%= scope.lookupvar('icinga::usrlib') %>/nagios/plugins/check_ntp_time -H pool.ntp.org -w 0.5 -c 1
-command[check_zombie_procs]=<%= scope.lookupvar('icinga::usrlib') %>/nagios/plugins/check_procs -w 5 -c 10 -s Z
-command[check_boot]=<%= scope.lookupvar('icinga::usrlib') %>/nagios/plugins/check_disk -w 20% -c 10% -p /boot
-command[check_root]=<%= scope.lookupvar('icinga::usrlib') %>/nagios/plugins/check_disk -w 20% -c 10% -p /
-command[check_home]=<%= scope.lookupvar('icinga::usrlib') %>/nagios/plugins/check_disk -w 20% -c 10% -p /home
-command[check_opt]=<%= scope.lookupvar('icinga::usrlib') %>/nagios/plugins/check_disk -w 20% -c 10% -p /opt
-command[check_tmp]=<%= scope.lookupvar('icinga::usrlib') %>/nagios/plugins/check_disk -w 20% -c 10% -p /tmp
-command[check_usr]=<%= scope.lookupvar('icinga::usrlib') %>/nagios/plugins/check_disk -w 20% -c 10% -p /usr
-command[check_var]=<%= scope.lookupvar('icinga::usrlib') %>/nagios/plugins/check_disk -w 20% -c 10% -p /var
-command[check_varlog]=<%= scope.lookupvar('icinga::usrlib') %>/nagios/plugins/check_disk -w 20% -c 10% -p /var/log
-command[check_mysql]=<%= scope.lookupvar('icinga::usrlib') %>/nagios/plugins/check_mysql
+command[check_users]=<%= scope.lookupvar('icinga::plugindir') %>/check_users -w 5 -c 10
+command[check_ntp_time]=<%= scope.lookupvar('icinga::plugindir') %>/check_ntp_time -H pool.ntp.org -w 0.5 -c 1
+command[check_zombie_procs]=<%= scope.lookupvar('icinga::plugindir') %>/check_procs -w 5 -c 10 -s Z
+command[check_boot]=<%= scope.lookupvar('icinga::plugindir') %>/check_disk -w 20% -c 10% -p /boot
+command[check_root]=<%= scope.lookupvar('icinga::plugindir') %>/check_disk -w 20% -c 10% -p /
+command[check_home]=<%= scope.lookupvar('icinga::plugindir') %>/check_disk -w 20% -c 10% -p /home
+command[check_opt]=<%= scope.lookupvar('icinga::plugindir') %>/check_disk -w 20% -c 10% -p /opt
+command[check_tmp]=<%= scope.lookupvar('icinga::plugindir') %>/check_disk -w 20% -c 10% -p /tmp
+command[check_usr]=<%= scope.lookupvar('icinga::plugindir') %>/check_disk -w 20% -c 10% -p /usr
+command[check_var]=<%= scope.lookupvar('icinga::plugindir') %>/check_disk -w 20% -c 10% -p /var
+command[check_varlog]=<%= scope.lookupvar('icinga::plugindir') %>/check_disk -w 20% -c 10% -p /var/log
+command[check_mysql]=<%= scope.lookupvar('icinga::plugindir') %>/check_mysql
 
 # The following examples allow user-supplied arguments and can
 # only be used if the NRPE daemon was compiled with support for
@@ -205,7 +205,7 @@ command[check_mysql]=<%= scope.lookupvar('icinga::usrlib') %>/nagios/plugins/che
 # config file is set to '1'.  This poses a potential security risk, so
 # make sure you read the SECURITY file before doing this.
 
-#command[check_users]=<%= scope.lookupvar('icinga::usrlib') %>/nagios/plugins/check_users -w $ARG1$ -c $ARG2$
-#command[check_load]=<%= scope.lookupvar('icinga::usrlib') %>/nagios/plugins/check_load -w $ARG1$ -c $ARG2$
-#command[check_disk]=<%= scope.lookupvar('icinga::usrlib') %>/nagios/plugins/check_disk -w $ARG1$ -c $ARG2$ -p $ARG3$
-#command[check_procs]=<%= scope.lookupvar('icinga::usrlib') %>/nagios/plugins/check_procs -w $ARG1$ -c $ARG2$ -s $ARG3$
+#command[check_users]=<%= scope.lookupvar('icinga::plugindir') %>/check_users -w $ARG1$ -c $ARG2$
+#command[check_load]=<%= scope.lookupvar('icinga::plugindir') %>/check_load -w $ARG1$ -c $ARG2$
+#command[check_disk]=<%= scope.lookupvar('icinga::plugindir') %>/check_disk -w $ARG1$ -c $ARG2$ -p $ARG3$
+#command[check_procs]=<%= scope.lookupvar('icinga::plugindir') %>/check_procs -w $ARG1$ -c $ARG2$ -s $ARG3$
