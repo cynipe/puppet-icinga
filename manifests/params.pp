@@ -12,9 +12,6 @@ class icinga::params {
   $use_auth                    = true
   $use_storedconfigs           = false
   $extensions                  = [ 'idoutils', 'icingaweb' ]
-  $plugins                     = [ 'checkpuppet' ]
-  $nrpe_allowed_hosts          = [ '127.0.0.1,', $::ipaddress ]
-  $nrpe_server_address         = $::ipaddress
   $icinga_admins               = [ '*' ]
   $collect_hostname            = $::fqdn
   $collect_ipaddress           = $::ipaddress
@@ -24,6 +21,11 @@ class icinga::params {
   $notification_host_enable    = true
   $notification_service_enable = true
   $max_check_attempts          = '4'
+
+  # Client
+  $plugins                     = [ 'checkpuppet' ]
+  $nrpe_allowed_hosts          = [ '127.0.0.1,', $::ipaddress ]
+  $nrpe_server_address         = $::ipaddress
 
   case $::operatingsystem {
     'Debian', 'Ubuntu': {
@@ -105,6 +107,8 @@ class icinga::params {
       $client_user               = 'nagios'
       $client_group              = 'nagios'
       $client_service            = 'nrpe'
+      $plugindir                 = "${usrlib}/nagios/plugins"
+      $client_includedir         = '/etc/nagios/nrpe.d'
 
       # Extension: Icinga Web
       $icingaweb_pkg     = [ 'icinga-web' ]

@@ -5,6 +5,11 @@
 #
 class icinga::server::preinstall {
 
+  exec { 'purge_icinga_configs':
+    command => 'rm -rf /etc/icinga',
+    unless  => '[ ! -d /etc/icinga ]'
+  }
+
   if $::icinga::server::manage_repo {
     case $::operatingsystem {
       'Debian', 'Ubuntu': {

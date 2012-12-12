@@ -1,14 +1,15 @@
 define icinga::host(
-  $hostname            = $name,
-  $fqdn                = $::icinga::server::collect_hostname,
-  $ipaddress           = $::icinga::server::collect_ipaddress,
+  $fqdn                = $name,
+  $ipaddress           = undef,
   $operatingsystem     = $::operatingsystem,
-  $max_check_attempts  = $::icinga::params::max_check_attempts,
-  $targetdir           = $::icinga::params::targetdir,
-  $notification_period = $::icinga::params::notification_period
+  $max_check_attempts  = $::icinga::server::max_check_attempts,
+  $notification_period = $::icinga::server::notification_period,
+  $targetdir           = $::icinga::server::targetdir
 ) {
 
-  @nagios_host { $hostname:
+  $hostname = inline_template("<%= fqdn.split('.').first %>")
+
+  @nagios_host { $fqdn:
     ensure             => present,
     alias              => $hostname,
     address            => $ipaddress,
@@ -21,7 +22,7 @@ define icinga::host(
     notify              => Exec['fix_permissions_objects'];
   }
 
-  @nagios_hostextinfo { $hostname:
+  @nagios_hostextinfo { $fqdn:
     ensure          => present,
     icon_image_alt  => $operatingsystem,
     icon_image      => "os/${operatingsystem}.png",
@@ -30,10 +31,10 @@ define icinga::host(
     notify              => Exec['fix_permissions_objects'];
   }
 
-  @nagios_service { "check_ping_${hostname}":
+  @nagios_service { "check_ping_${fqdn}":
     service_description => 'Ping',
     check_command       => 'check_ping!100.0,20%!500.0,60%',
-    host_name           => $hostname,
+    host_name           => $fqdn,
     use                 => 'generic-service',
     max_check_attempts  => $max_check_attempts,
     notification_period => $notification_period,
