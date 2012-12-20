@@ -3,10 +3,7 @@ class icinga::server(
   $version                     = $::icinga::params::version,
   $manage_repo                 = $::icinga::params::manage_repo,
   $use_auth                    = $::icinga::params::use_auth,
-  $use_storedconfigs           = $::icinga::params::use_storedconfigs,
   $extensions                  = $::icinga::params::extensions,
-  $nrpe_allowed_hosts          = $::icinga::params::nrpe_allowed_hosts,
-  $nrpe_server_address         = $::icinga::params::nrpe_server_address,
   $icinga_admins               = $::icinga::params::icinga_admins,
   $collect_hostname            = $::icinga::params::collect_hostname,
   $collect_ipaddress           = $::icinga::params::collect_ipaddress,
@@ -52,11 +49,13 @@ class icinga::server(
   include icinga::server::collect
   include icinga::server::service
 
+  anchor { 'icinga::sever::begin': } ->
   Class['icinga::server::preinstall'] ->
   Class['icinga::server::install'] ->
   Class['icinga::server::config'] ->
   Class['icinga::server::extensions'] ->
   Class['icinga::server::collect'] ->
-  Class['icinga::server::service']
+  Class['icinga::server::service'] ->
+  anchor { 'icinga::sever::end': }
 
 }

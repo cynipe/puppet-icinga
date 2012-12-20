@@ -1,5 +1,5 @@
 define icinga::host(
-  $master_id              = '',
+  $master_id           = '',
   $fqdn                = $name,
   $alias               = $name,
   $ipaddress           = undef,
