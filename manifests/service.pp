@@ -1,5 +1,6 @@
 define icinga::service(
   $check_command,
+  $master_id           = '',
   $service_description = undef,
   $fqdn                = undef,
   $ipaddress           = undef,
@@ -34,6 +35,7 @@ define icinga::service(
     max_check_attempts  => $max_check_attempts,
     target              => "${targetdir}/services/${real_fqdn}.cfg",
     action_url          => '/pnp4nagios/graph?host=$HOSTNAME$&srv=$SERVICEDESC$',
-    notify              => Exec['fix_permissions_objects'];
+    notify              => Exec['fix_permissions_objects'],
+    tag                 => $master_id,
   }
 }

@@ -1,4 +1,5 @@
 class icinga::server(
+  $master_id                   = '',
   $version                     = $::icinga::params::version,
   $manage_repo                 = $::icinga::params::manage_repo,
   $use_auth                    = $::icinga::params::use_auth,

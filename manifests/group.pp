@@ -4,6 +4,7 @@
 #
 define icinga::group (
   $ensure               = present,
+  $master_id            = '',
   $members              = undef,
   $contactgroup_name    = $name,
   $target               = "${::icinga::server::targetdir}/contactgroups.cfg"
@@ -14,6 +15,7 @@ define icinga::group (
     contactgroup_name => $contactgroup_name,
     members           => $members,
     target            => $target,
+    tag                  => $master_id,
   }
 
   if $::icinga::server::use_storedconfigs  {

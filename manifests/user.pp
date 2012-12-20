@@ -3,6 +3,7 @@
 # This class provides the ability to manage Icinga users.
 #
 define icinga::user (
+  $master_id                     = '',
   $ensure                        = present,
   $can_submit_commands           = '1',
   $contact_name                  = $name,
@@ -63,6 +64,7 @@ define icinga::user (
     service_notification_commands => $service_notification_commands,
     service_notification_period   => $service_notification_period,
     service_notification_options  => $service_notification_options,
+    tag                           => $master_id
   }
 
   if $::icinga::server::use_storedconfigs {
