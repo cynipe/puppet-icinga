@@ -86,8 +86,7 @@ class icinga::server::config::redhat {
       content => template('icinga/redhat/hostgroups.cfg.erb');
 
     "${::icinga::server::targetdir}/notifications.cfg":
-      ensure  => present,
-      content => template('icinga/redhat/notifications.cfg.erb');
+      ensure  => absent;
 
     "${::icinga::server::targetdir}/timeperiods.cfg":
       ensure  => present,

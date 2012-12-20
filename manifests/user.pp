@@ -4,7 +4,7 @@
 #
 define icinga::user (
   $ensure                        = present,
-  $can_submit_commands           = '0',
+  $can_submit_commands           = '1',
   $contact_name                  = $name,
   $contactgroup                  = undef,
   $email                         = undef,
@@ -12,10 +12,10 @@ define icinga::user (
   $password_hash                 = undef,
   $host_notification_commands    = $::icinga::server::notification_cmd_host,
   $host_notification_period      = $::icinga::server::notification_period,
-  $host_notifications_enabled    = $::icinga::server::notification_host_enable,
+  $host_notification_options     = 'd,r',
   $service_notification_commands = $::icinga::server::notification_cmd_service,
   $service_notification_period   = $::icinga::server::notification_period,
-  $service_notifications_enabled = $::icinga::server::notification_service_enable,
+  $service_notification_options  = 'w,u,c,r',
   $target                        = "${::icinga::server::targetdir}/contacts.cfg"
 ) {
 
@@ -59,10 +59,10 @@ define icinga::user (
     target                        => $target,
     host_notification_commands    => $host_notification_commands,
     host_notification_period      => $host_notification_period,
-    host_notifications_enabled    => $host_notifications_enabled,
+    host_notification_options     => $host_notification_options,
     service_notification_commands => $service_notification_commands,
     service_notification_period   => $service_notification_period,
-    service_notifications_enabled => $service_notifications_enabled,
+    service_notification_options  => $service_notification_options,
   }
 
   if $::icinga::server::use_storedconfigs {

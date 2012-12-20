@@ -4,19 +4,19 @@
 #
 define icinga::group (
   $ensure               = present,
-  $contactgroup_members = undef,
+  $members              = undef,
   $contactgroup_name    = $name,
-  $target               = $::icinga::targetdir_contacts
+  $target               = "${::icinga::server::targetdir}/contactgroups.cfg"
 ) {
 
   Nagios_contactgroup {
-    ensure               => $ensure,
-    contactgroup_name    => $contactgroup_name,
-    contactgroup_members => $contactgroup_members,
-    target               => $target,
+    ensure            => $ensure,
+    contactgroup_name => $contactgroup_name,
+    members           => $members,
+    target            => $target,
   }
 
-  if $::icinga::use_storedconfigs  {
+  if $::icinga::server::use_storedconfigs  {
     @@nagios_contactgroup { $name: }
   } else {
     @nagios_contactgroup { $name: }
