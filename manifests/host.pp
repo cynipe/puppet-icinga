@@ -1,5 +1,6 @@
 define icinga::host(
   $fqdn                = $name,
+  $alias               = $name,
   $ipaddress           = undef,
   $operatingsystem     = $::operatingsystem,
   $max_check_attempts  = $::icinga::server::max_check_attempts,
@@ -7,11 +8,9 @@ define icinga::host(
   $targetdir           = $::icinga::server::targetdir
 ) {
 
-  $hostname = inline_template("<%= fqdn.split('.').first %>")
-
   @nagios_host { $fqdn:
     ensure             => present,
-    alias              => $hostname,
+    alias              => $alias,
     address            => $ipaddress,
     max_check_attempts => $max_check_attempts,
     check_command      => 'check-host-alive',
