@@ -3,8 +3,8 @@
 # This class provides the ability to manage Icinga users.
 #
 define icinga::user (
-  $master_id                     = '',
   $ensure                        = present,
+  $master_id                     = $::icinga::server::master_id,
   $can_submit_commands           = '1',
   $contact_name                  = $name,
   $contactgroup                  = undef,
@@ -30,28 +30,30 @@ define icinga::user (
     notify  => Service[$service],
   }
 
-  case $ensure {
-    present: {
-      exec { "Add Icinga user hash ${name}":
-        command => "echo \"${name}:${password_hash}\" >> ${htpasswd}",
-        unless  => "grep -iE '^${name}:${password_hash}' ${htpasswd}",
+  if $password_hash {
+    case $ensure {
+      present: {
+        exec { "Add Icinga user hash ${name}":
+          command => "echo \"${name}:${password_hash}\" >> ${htpasswd}",
+          unless  => "grep -iE '^${name}:${password_hash}' ${htpasswd}",
+        }
       }
-    }
 
-    absent: {
-      exec { "Remove Icinga user ${name}":
-        command => "htpasswd -D ${htpasswd} ${name}",
-        onlyif  => "grep -iE '^${name}:' ${htpasswd}",
-        cwd     => '/etc/icinga',
+      absent: {
+        exec { "Remove Icinga user ${name}":
+          command => "htpasswd -D ${htpasswd} ${name}",
+          onlyif  => "grep -iE '^${name}:' ${htpasswd}",
+          cwd     => '/etc/icinga',
+        }
       }
-    }
 
-    default: {
-      fail "Invalid value for \$icinga::user::ensure: ${ensure}."
+      default: {
+        fail "Invalid value for \$icinga::user::ensure: ${ensure}."
+      }
     }
   }
 
-  Nagios_contact {
+  @nagios_contact { $name:
     ensure                        => $ensure,
     can_submit_commands           => $can_submit_commands,
     contact_name                  => $contact_name,
@@ -64,12 +66,8 @@ define icinga::user (
     service_notification_commands => $service_notification_commands,
     service_notification_period   => $service_notification_period,
     service_notification_options  => $service_notification_options,
-    tag                           => $master_id
-  }
-
-  if $::icinga::server::use_storedconfigs {
-    @@nagios_contact { $name: }
-  } else {
-    @nagios_contact { $name: }
+    require                       => Exec['purge_icinga_configs'],
+    notify                        => Exec['fix_permissions_objects'],
+    tag                           => $master_id,
   }
 }

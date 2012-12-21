@@ -49,13 +49,11 @@ class icinga::server(
   include icinga::server::collect
   include icinga::server::service
 
-  anchor { 'icinga::sever::begin': } ->
   Class['icinga::server::preinstall'] ->
   Class['icinga::server::install'] ->
   Class['icinga::server::config'] ->
   Class['icinga::server::extensions'] ->
   Class['icinga::server::collect'] ->
-  Class['icinga::server::service'] ->
-  anchor { 'icinga::sever::end': }
+  Class['icinga::server::service']
 
 }

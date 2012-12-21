@@ -8,6 +8,8 @@ class icinga::server::extensions::pnp4nagios (
   include icinga::server::extensions::pnp4nagios::install
   include icinga::server::extensions::pnp4nagios::config
 
+  anchor {'icinga::server::extensions::pnp4nagios::begin': } ->
   Class['icinga::server::extensions::pnp4nagios::install'] ->
-  Class['icinga::server::extensions::pnp4nagios::config']
+  Class['icinga::server::extensions::pnp4nagios::config'] ->
+  anchor {'icinga::server::extensions::pnp4nagios::end': }
 }

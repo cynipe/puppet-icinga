@@ -35,6 +35,7 @@ define icinga::service(
     max_check_attempts  => $max_check_attempts,
     target              => "${targetdir}/services/${real_fqdn}.cfg",
     action_url          => '/pnp4nagios/graph?host=$HOSTNAME$&srv=$SERVICEDESC$',
+    require             => Exec['purge_icinga_configs'],
     notify              => Exec['fix_permissions_objects'],
     tag                 => $master_id,
   }

@@ -19,6 +19,7 @@ define icinga::host(
     hostgroups         => 'linux-servers',
     action_url         => '/pnp4nagios/graph?host=$HOSTNAME$',
     target             => "${targetdir}/hosts/host-${fqdn}.cfg",
+    require            => Exec['purge_icinga_configs'],
     notify             => Exec['fix_permissions_objects'],
     tag                => $master_id,
   }
@@ -29,8 +30,9 @@ define icinga::host(
     icon_image      => "os/${operatingsystem}.png",
     statusmap_image => "os/${operatingsystem}.png",
     target          => "${targetdir}/hosts/hostextinfo-${fqdn}.cfg",
-    notify              => Exec['fix_permissions_objects'],
-    tag                => $master_id,
+    require         => Exec['purge_icinga_configs'],
+    notify          => Exec['fix_permissions_objects'],
+    tag             => $master_id,
   }
 
   @nagios_service { "check_ping_${fqdn}":
@@ -42,7 +44,8 @@ define icinga::host(
     notification_period => $notification_period,
     target              => "${targetdir}/services/${fqdn}.cfg",
     action_url          => '/pnp4nagios/graph?host=$HOSTNAME$&srv=$SERVICEDESC$',
+    require             => Exec['purge_icinga_configs'],
     notify              => Exec['fix_permissions_objects'],
-    tag                => $master_id,
+    tag                 => $master_id,
   }
 }

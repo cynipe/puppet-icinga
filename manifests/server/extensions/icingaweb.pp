@@ -6,6 +6,8 @@ class icinga::server::extensions::icingaweb {
   include icinga::server::extensions::icingaweb::install
   include icinga::server::extensions::icingaweb::config
 
+  anchor {'icinga::server::extensions::icingaweb::begin': } ->
   Class['icinga::server::extensions::icingaweb::install'] ->
-  Class['icinga::server::extensions::icingaweb::config']
+  Class['icinga::server::extensions::icingaweb::config'] ->
+  anchor {'icinga::server::extensions::icingaweb::end': }
 }
