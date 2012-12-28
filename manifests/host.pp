@@ -1,7 +1,7 @@
 define icinga::host(
   $master_id           = '',
   $fqdn                = $name,
-  $alias               = $name,
+  $host_alias          = $name,
   $ipaddress           = undef,
   $operatingsystem     = $::operatingsystem,
   $max_check_attempts  = $::icinga::server::max_check_attempts,
@@ -11,7 +11,7 @@ define icinga::host(
 
   @nagios_host { $fqdn:
     ensure             => present,
-    alias              => $alias,
+    alias              => $host_alias,
     address            => $ipaddress,
     max_check_attempts => $max_check_attempts,
     check_command      => 'check-host-alive',
